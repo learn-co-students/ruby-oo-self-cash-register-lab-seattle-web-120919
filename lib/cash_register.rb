@@ -1,55 +1,54 @@
-require 'pry'
+require "pry"
 
 class CashRegister
+  attr_accessor :discount, :total, :title, :cart
 
-    attr_reader :discount, :total
-    attr_writer :total
-    attr_accessor :items
+  def initialize(discount = nil)
+    @discount = discount
+    @total = 0
+    @cart = []
+  end
 
-    def initialize(discount=0.0)
-        @total = 0
-        @discount = discount
-        @items = []
-    end 
-
-    def add_item(title, price, quantity=1)
-
-        quantity.times do 
-            @items << title 
-        end  
-        @total = @total + (price * quantity)
-         @last_item_price = price
-         @last_quantity_item = quantity
-         @items
-end 
-
-    def apply_discount
-    @total -= @total * @discount.to_f/100
-    if discount == 0
-    "There is no discount to apply."
-    else 
-    "After the discount, the total comes to $#{@total.to_i}."
-    end 
-end 
-
-
-def items
-    @items 
-end 
-
-def void_last_transaction
+  def add_item(title, price, quantity = 1) #know which items are going to be needing to be placed in. create variables to represent things.
+    # binding.pry
+    @total += (price * quantity)
+    @last_item_price = price
+    @last_item_quantity = quantity
+    # @last_item_price = price #why does setting this here represent the price of the last item?
+    counter = 0
+    while counter < quantity
+      @cart << title
+      #binding.pry
+      counter += 1
+    end
+    @cart
     #binding.pry
-@total -= (@last_item_price*@last_quantity_item)
+    #binding.pry
+  end
 
-if @items.length <= 0
-    @total = 0.0
+  def apply_discount
+    if discount
+      @total -= (discount / 100.to_f) * @total
+      return "After the discount, the total comes to $#{@total.to_i}."
+    else
+      return "There is no discount to apply."
+    end
+  end
 
+  def items
+    @cart
+    #binding.pry
+    #binding.pry
+    #binding.pry
+  end
 
-end 
-
-    
-
-  
-
-end 
-end 
+  def void_last_transaction
+    #binding.pry
+    if @cart.length == 0
+      @total = 0.0
+    end
+    @total -= (@last_item_price * @last_item_quantity)
+    @cart.pop
+    #binding.pry
+  end
+end
